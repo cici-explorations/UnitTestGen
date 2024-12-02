@@ -1,4 +1,6 @@
 import openai
+import litellm
+
 import logging
 from . import config
 from .container_manager import ContainerManager
@@ -158,11 +160,20 @@ def _generate_response(
     if config.MODEL is None:
         raise ValueError("MODEL is not set. Call set_model first.")
     
-    openai.api_key = config.API_KEY
-    openai.organization = config.ORG_KEY
+    # openai.api_key = config.API_KEY
+    # openai.organization = config.ORG_KEY
 
-    resp = openai.ChatCompletion.create(
-        model=config.MODEL,
+    # resp = openai.ChatCompletion.create(
+    #     model=config.MODEL,
+    #     messages=messages,
+    #     temperature=temp,
+    #     n=n_samples
+    # )
+
+    resp = litellm.completion(
+        model=config.MODEL,               # add `openai/` prefix to model so litellm knows to route to OpenAI
+        api_key=config.API_KEY,                  # api key to your openai compatible endpoint
+        api_base=config.API_BASE,     # set API Base of your Custom OpenAI Endpoint
         messages=messages,
         temperature=temp,
         n=n_samples
