@@ -99,6 +99,14 @@ class ContainerManager:
         client = docker.from_env()
         return client
 
+    # def list_avaliable_images(self) -> list[str]:
+    #     """
+    #     List all the available docker images.
+        
+    #     Returns:
+    #         list[str]: List of in env available docker images.
+    #     """
+    #     return [image.tags[0] for image in self.client.images.list(all=True)]
     def list_avaliable_images(self) -> list[str]:
         """
         List all the available docker images.
@@ -106,7 +114,15 @@ class ContainerManager:
         Returns:
             list[str]: List of in env available docker images.
         """
-        return [image.tags[0] for image in self.client.images.list(all=True)]
+        image_list = []
+        print(self.client.images.list(all=True))
+        for image in self.client.images.list(all=True):
+            if len(image.tags)!=0:
+                image_list.append(image.tags[0])
+            else:
+                continue
+
+        return image_list
 
     def get_container_status(self) -> str:
         """Returns the status of the container."""
